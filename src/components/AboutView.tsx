@@ -173,9 +173,14 @@ export const AboutView: React.FC<AboutViewProps> = ({
               <div className="w-7 h-7 rounded-lg bg-stone-800 text-amber-400 flex items-center justify-center shrink-0 font-bold font-mono">
                 ✓
               </div>
-              <div>
-                <span className="font-bold text-stone-200 block">{info.label}</span>
-                <span className="text-stone-400 leading-relaxed mt-0.5 block">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-stone-200 block">{info.label}</span>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full border font-mono ${info.badgeClass}`}>
+                    {key}
+                  </span>
+                </div>
+                <span className="text-stone-400 leading-relaxed block">
                   {info.description}
                 </span>
               </div>

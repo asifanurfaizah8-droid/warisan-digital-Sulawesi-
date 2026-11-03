@@ -646,7 +646,7 @@ export const INITIAL_HERITAGE_ITEMS: HeritageItem[] = [
   {
     "id": "mandar-perahu-sandeq-09",
     "title": "Teknologi Perahu Cadik Sandeq & Nilai Malaqbi",
-    "subtitle": "Mahakarya Perahu Layar Tercepat Dunia Karya Suku Bahari Mandar",
+    "subtitle": "Kajian Etnografi Maritim Perahu Layar Cadik Aerodinamika Tinggi Suku Mandar",
     "category": "tani_bahari",
     "province": "Sulawesi Barat",
     "tribe": "Mandar",
@@ -655,19 +655,20 @@ export const INITIAL_HERITAGE_ITEMS: HeritageItem[] = [
       "name": "Punggawa Baharuddin",
       "age": 70,
       "titleOrRole": "Punggawa Lopi (Nakhoda Sandeq Kawakan)",
-      "location": "Tinambung, Polewali Mandar"
+      "location": "Tinambung, Polewali Mandar",
+      "status": "tokoh_ilustratif"
     },
     "recordedBy": {
       "name": "Ahmad Alwi",
       "schoolOrAffiliation": "SMK Pelayaran Majene",
       "date": "25 Agustus 2024"
     },
-    "summary": "Sandeq adalah perahu layar bercadik ganda khas Mandar yang dinobatkan sebagai perahu layar tradisional tercepat di dunia (mencapai 20-30 knot) hanya dengan dorongan angin pada layar segitiga sombaq.",
+    "summary": "Sandeq adalah perahu layar bercadik ganda khas Mandar yang didokumentasikan dalam penelitian antropologi maritim (Horst H. Liebner & M. Ridwan Alimuddin) sebagai salah satu perahu layar tradisional dengan efisiensi aerodinamika lambung tertinggi di perairan Nusantara (mampu melaju 15-22 knot) murni mengandalkan tenaga angin pada layar segitiga sombaq tanjaq tanpa mesin.",
     "philosophicalMeaning": "Falsafah Malaqbi (anggun, berani, berakhlak mulia) tercermin pada ketajaman haluan perahu yang membelah ombak tanpa menimbulkan suara gaduh, mencerminkan kerendahan hati pelaut Mandar di hadapan samudra luas.",
     "localTerms": [
       {
         "term": "Sandeq",
-        "meaning": "Perahu cadik runcing ramping lambang kecepatan dan nyali Mandar",
+        "meaning": "Perahu cadik runcing ramping lambang ketangkasan dan kehormatan bahari Mandar",
         "language": "Mandar"
       },
       {
@@ -1378,8 +1379,8 @@ export const INITIAL_HERITAGE_ITEMS: HeritageItem[] = [
   },
   {
     "id": "muna-layang-kaghati-kolope-19",
-    "title": "Kaghati Kolope: Layang-Layang Tertua di Dunia Berbahan Daun Ubi Hutan",
-    "subtitle": "Mahakarya Aerodinamika Prasejarah Berusia 4.000 Tahun dari Pulau Muna",
+    "title": "Kaghati Kolope: Aeromodelling Tradisional Daun Kolope Suku Muna",
+    "subtitle": "Kajian Arkeologis Tradisi Layangan Prasejarah Karst Liang Kabori",
     "category": "permainan",
     "province": "Sulawesi Tenggara",
     "tribe": "Muna",
@@ -1388,15 +1389,16 @@ export const INITIAL_HERITAGE_ITEMS: HeritageItem[] = [
       "name": "La Mina",
       "age": 79,
       "titleOrRole": "Maestro Pembuat Kaghati Kolope Tradisional",
-      "location": "Desa Liang Kobori, Raha, Muna"
+      "location": "Desa Liang Kobori, Raha, Muna",
+      "status": "tokoh_ilustratif"
     },
     "recordedBy": {
       "name": "La Ode Asrul & Wa Ode Sitti",
       "schoolOrAffiliation": "SMA Negeri 1 Raha",
       "date": "06 Agustus 2024"
     },
-    "summary": "Kaghati Kolope adalah layang-layang tradisional suku Muna yang terbukti secara arkeologis merupakan layang-layang tertua di dunia (tergambar pada lukisan cadas dinding Gua Sugipatani berusia 4.000 SM). Layang-layang ini dibuat dari jajaran daun ubi hutan (kolope) yang dirangkai bambu dan benang serat nanas.",
-    "philosophicalMeaning": "Kaghati diterbangkan selama tujuh hari tujuh malam tanpa turun sebagai payung spiritual bagi jiwa petani dan pelindung panen jagung. Suara getaran pita daun arennya (kamumu) yang berdengung syahdu di angkasa mengusir mara bahaya.",
+    "summary": "Kaghati Kolope adalah layang-layang tradisional suku Muna yang didokumentasikan dalam penelitian arkeologi cadas (Balai Arkeologi Makassar & Wolfgang Bieck) sebagai salah satu bukti tradisi aeromodelling tertua di kawasan Asia Tenggara berdasarkan lukisan cadas dinding karst Gua Liang Kabori. Layang-layang ini dirakit dari helaian daun ubi gadung hutan (kolope) yang diasapi, kerangka bambu tipis, serta benang pilin serat nanas.",
+    "philosophicalMeaning": "Kaghati diterbangkan selama berhari-hari di angkasa sebagai payung spiritual bagi jiwa petani dan pelindung panen jagung. Suara getaran pita daun arennya (kamumu) yang berdengung syahdu di angkasa menjadi simbol keselarasan manusia dengan semesta.",
     "localTerms": [
       {
         "term": "Kaghati",

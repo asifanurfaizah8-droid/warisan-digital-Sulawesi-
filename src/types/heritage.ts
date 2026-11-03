@@ -54,10 +54,10 @@ export type VerificationStatus =
   | 'butuh_verifikasi'; // Membutuhkan Riset Lapangan Tambahan
 
 export type NarratorStatus =
-  | 'tokoh_nyata' // Tokoh Nyata / Tokoh Adat / Pelaku Budaya
+  | 'tokoh_ilustratif' // Tokoh Fiktif untuk Ilustrasi Edukatif (Personifikasi Tradisi Tutur)
+  | 'tokoh_nyata' // Narasumber Adat Riil / Maestro Budaya Terverifikasi
   | 'tokoh_sejarah_tercatat' // Tokoh Sejarah Tercatat di Arsip / Lontara
-  | 'nama_disamarkan' // Nama Disamarkan demi Privasi Informan
-  | 'tokoh_ilustratif'; // Personifikasi Ilustratif Tradisi
+  | 'nama_disamarkan'; // Nama Disamarkan demi Privasi Informan
 
 export type ReferenceType =
   | 'buku'
@@ -153,6 +153,9 @@ export interface HeritageItem {
   preservationAdvice: string;
   estimatedEra: string;
   tags: string[];
+  socialFunction?: string;
+  ecologicalBenefits?: string;
+  modernRelevance?: string;
   references?: CulturalReference[];
   geographicData?: GeographicData;
   documentationMeta?: DocumentationMeta;

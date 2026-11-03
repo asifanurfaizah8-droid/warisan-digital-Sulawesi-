@@ -25,8 +25,10 @@ import {
   Copy,
   Check,
   Scale,
-  ExternalLink,
   Tag,
+  Users,
+  Leaf,
+  Lightbulb,
 } from 'lucide-react';
 import { HeritageItem, CulturalReference } from '../types/heritage';
 import { speakText, stopSpeaking } from '../utils/storage';
@@ -156,7 +158,7 @@ export const HeritageDetailModal: React.FC<HeritageDetailModalProps> = ({
     VERIFICATION_STATUS_CONFIG[item.verificationStatus || 'tradisi_lisan'];
 
   const narratorConfig =
-    NARRATOR_STATUS_CONFIG[item.elderNarrator.status || 'tokoh_nyata'];
+    NARRATOR_STATUS_CONFIG[item.elderNarrator.status || 'tokoh_ilustratif'];
 
   // Font size classes
   const fontBodyClass =
@@ -375,12 +377,12 @@ export const HeritageDetailModal: React.FC<HeritageDetailModalProps> = ({
                   <div className="w-9 h-9 rounded-lg bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center shrink-0 mt-0.5">
                     <User className="w-5 h-5" />
                   </div>
-                  <div className="text-xs space-y-1 flex-1">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-stone-400 font-mono text-[11px]">Narasumber:</span>
+                  <div className="text-xs space-y-1.5 flex-1">
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
+                      <span className="text-stone-400 font-mono text-[11px]">Narasumber / Informan:</span>
                       <span
                         title={narratorConfig.description}
-                        className="text-[10px] px-2 py-0.5 rounded-full bg-stone-800 text-stone-300 border border-stone-700 font-mono"
+                        className={`text-[10px] px-2 py-0.5 rounded-full border font-mono font-medium ${narratorConfig.badgeClass || 'bg-stone-800 text-stone-300 border-stone-700'}`}
                       >
                         {narratorConfig.label}
                       </span>
@@ -392,6 +394,11 @@ export const HeritageDetailModal: React.FC<HeritageDetailModalProps> = ({
                     <p className="text-stone-400 text-[11px]">
                       {item.elderNarrator.titleOrRole} • {item.elderNarrator.location}
                     </p>
+                    {item.elderNarrator.status === 'tokoh_ilustratif' && (
+                      <p className="text-[10px] text-amber-300/90 bg-amber-950/40 border border-amber-800/40 rounded-lg p-2 mt-1 leading-relaxed">
+                        ℹ️ <strong>Tokoh Fiktif untuk Ilustrasi:</strong> Karakter ini merupakan personifikasi figuratif edukatif yang disusun berdasarkan kompilasi tradisi tutur lisan dan kearifan masyarakat setempat, bukan narasumber perorangan riil. Kebudayaan diverifikasi melalui rujukan tertulis dan balai pelestarian adat.
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -443,6 +450,47 @@ export const HeritageDetailModal: React.FC<HeritageDetailModalProps> = ({
                 </p>
               </div>
             </div>
+
+            {/* Scientific & Cultural Dimensions: Social Function, Ecological Benefits, Modern Relevance */}
+            {(item.socialFunction || item.ecologicalBenefits || item.modernRelevance) && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-stone-800 pt-5">
+                {item.socialFunction && (
+                  <div className="p-4 rounded-xl bg-stone-950/70 border border-stone-800 space-y-2 hover:border-amber-700/50 transition">
+                    <div className="flex items-center gap-2 text-xs font-semibold text-amber-300 uppercase tracking-wide">
+                      <Users className="w-4 h-4 text-amber-400 shrink-0" />
+                      <span>Fungsi Sosial & Adat</span>
+                    </div>
+                    <p className="text-xs text-stone-300 font-serif leading-relaxed">
+                      {item.socialFunction}
+                    </p>
+                  </div>
+                )}
+
+                {item.ecologicalBenefits && (
+                  <div className="p-4 rounded-xl bg-stone-950/70 border border-stone-800 space-y-2 hover:border-emerald-700/50 transition">
+                    <div className="flex items-center gap-2 text-xs font-semibold text-emerald-300 uppercase tracking-wide">
+                      <Leaf className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span>Manfaat Ekologis & Kelestarian</span>
+                    </div>
+                    <p className="text-xs text-stone-300 font-serif leading-relaxed">
+                      {item.ecologicalBenefits}
+                    </p>
+                  </div>
+                )}
+
+                {item.modernRelevance && (
+                  <div className="p-4 rounded-xl bg-stone-950/70 border border-stone-800 space-y-2 hover:border-blue-700/50 transition">
+                    <div className="flex items-center gap-2 text-xs font-semibold text-blue-300 uppercase tracking-wide">
+                      <Lightbulb className="w-4 h-4 text-blue-400 shrink-0" />
+                      <span>Relevansi Generasi Muda</span>
+                    </div>
+                    <p className="text-xs text-stone-300 font-serif leading-relaxed">
+                      {item.modernRelevance}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Local Dialect Words / Vocabulary */}
             {item.localTerms && item.localTerms.length > 0 && (

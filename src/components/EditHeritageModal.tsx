@@ -26,6 +26,7 @@ import {
   Tribe,
   LocalTerm,
   StepOrNarrative,
+  NarratorStatus,
 } from '../types/heritage';
 
 interface EditHeritageModalProps {
@@ -98,6 +99,9 @@ export const EditHeritageModal: React.FC<EditHeritageModalProps> = ({
   const [elderAge, setElderAge] = useState<number | ''>(item.elderNarrator.age ?? '');
   const [elderTitle, setElderTitle] = useState(item.elderNarrator.titleOrRole);
   const [elderLocation, setElderLocation] = useState(item.elderNarrator.location);
+  const [elderStatus, setElderStatus] = useState<NarratorStatus>(
+    item.elderNarrator.status || 'tokoh_ilustratif'
+  );
 
   const [studentName, setStudentName] = useState(item.recordedBy.name);
   const [studentSchool, setStudentSchool] = useState(item.recordedBy.schoolOrAffiliation);
@@ -154,6 +158,7 @@ export const EditHeritageModal: React.FC<EditHeritageModalProps> = ({
     setElderAge(item.elderNarrator.age ?? '');
     setElderTitle(item.elderNarrator.titleOrRole);
     setElderLocation(item.elderNarrator.location);
+    setElderStatus(item.elderNarrator.status || 'tokoh_ilustratif');
     setStudentName(item.recordedBy.name);
     setStudentSchool(item.recordedBy.schoolOrAffiliation);
     setRecordDate(item.recordedBy.date);
@@ -332,6 +337,7 @@ export const EditHeritageModal: React.FC<EditHeritageModalProps> = ({
         age: typeof elderAge === 'number' ? elderAge : undefined,
         titleOrRole: elderTitle.trim(),
         location: elderLocation.trim(),
+        status: elderStatus,
       },
       recordedBy: {
         name: studentName.trim() || item.recordedBy.name,
@@ -695,15 +701,31 @@ export const EditHeritageModal: React.FC<EditHeritageModalProps> = ({
                     />
                   </div>
 
-                  <div className="space-y-1">
-                    <label className="text-xs font-semibold text-stone-300">Lokasi / Domisili Tetua</label>
-                    <input
-                      type="text"
-                      value={elderLocation}
-                      onChange={(e) => setElderLocation(e.target.value)}
-                      className="w-full bg-stone-900 border border-stone-800 rounded-xl px-3 py-2 text-xs text-stone-100 focus:outline-none focus:border-amber-500"
-                      placeholder="Misal: Palopo, Luwu"
-                    />
+                  <div className="space-y-1 sm:col-span-2">
+                    <label className="text-xs font-semibold text-amber-300">
+                      Status Keabsahan Tokoh / Narasumber
+                    </label>
+                    <select
+                      value={elderStatus}
+                      onChange={(e) => setElderStatus(e.target.value as NarratorStatus)}
+                      className="w-full bg-stone-900 border border-stone-800 rounded-xl px-3 py-2 text-xs text-stone-100 focus:outline-none focus:border-amber-500 font-mono"
+                    >
+                      <option value="tokoh_ilustratif">
+                        Tokoh Fiktif untuk Ilustrasi (Personifikasi Tradisi Tutur Edukatif)
+                      </option>
+                      <option value="tokoh_nyata">
+                        Narasumber Adat Riil / Maestro Budaya Hidup Terverifikasi
+                      </option>
+                      <option value="tokoh_sejarah_tercatat">
+                        Tokoh Sejarah Tercatat (Manuskrip Lontara / Arsip Pemerintah)
+                      </option>
+                      <option value="nama_disamarkan">
+                        Nama Disamarkan (Perlindungan Privasi Informan Lapangan)
+                      </option>
+                    </select>
+                    <p className="text-[11px] text-stone-400 mt-1">
+                      ℹ️ <em>Integritas Data:</em> Apabila nama tokoh bukan individu riil yang diwawancarai langsung (melainkan nama figur ilustratif seperti representasi tetua), gunakan label <strong>"Tokoh Fiktif untuk Ilustrasi"</strong> agar tidak menyesatkan pembaca.
+                    </p>
                   </div>
                 </div>
               </div>

@@ -462,10 +462,10 @@ export const SULAWESI_QUIZ_BANK: QuizQuestion[] = [
   // ==========================================
   {
     id: 'quiz-tani-bahari-01',
-    question: 'Perahu layar bercadik tertipis dan tercepat di dunia yang menjadi mahakarya maritim suku Mandar tanpa menggunakan mesin adalah...',
+    question: 'Perahu layar bercadik ramping khas suku Mandar yang diakui dalam studi etnografi maritim memiliki kelincahan aerodinamika tinggi tanpa mesin adalah...',
     options: ['Perahu Sandeq', 'Kapal Pinisi', 'Perahu Lambo', 'Perahu Lepa-Lepa'],
     answerIndex: 0,
-    explanation: 'Perahu Sandeq suku Mandar mampu melesat hingga 20-30 knot membelah Selat Makassar hanya bermodalkan tiupan angin pada layar segitiga nabi (sombal lateq) dan cadik guling penyeimbang.',
+    explanation: 'Perahu Sandeq suku Mandar mampu melaju 15-22 knot membelah Selat Makassar hanya bermodalkan tiupan angin pada layar segitiga sombaq tanjaq dan cadik bambu penyeimbang (Liebner & Alimuddin, 2005).',
     tribe: 'Mandar',
     province: 'Sulawesi Barat',
     category: 'tani_bahari',

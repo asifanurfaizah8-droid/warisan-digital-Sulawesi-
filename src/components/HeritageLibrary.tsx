@@ -401,7 +401,7 @@ export const HeritageLibrary: React.FC<HeritageLibraryProps> = ({
             const verConfig =
               VERIFICATION_STATUS_CONFIG[item.verificationStatus || 'tradisi_lisan'];
             const narrConfig =
-              NARRATOR_STATUS_CONFIG[item.elderNarrator.status || 'tokoh_nyata'];
+              NARRATOR_STATUS_CONFIG[item.elderNarrator.status || 'tokoh_ilustratif'];
 
             return (
               <div
@@ -476,8 +476,11 @@ export const HeritageLibrary: React.FC<HeritageLibraryProps> = ({
                       <User className="w-3.5 h-3.5 text-amber-400 shrink-0" />
                       <div className="flex items-center gap-1.5 line-clamp-1 flex-1">
                         <strong>{item.elderNarrator.name}</strong>
-                        <span className="text-[10px] text-stone-400 font-mono">
-                          ({narrConfig.label})
+                        <span
+                          title={narrConfig.description}
+                          className="text-[10px] text-stone-400 font-mono shrink-0"
+                        >
+                          • {narrConfig.label}
                         </span>
                       </div>
                     </div>
