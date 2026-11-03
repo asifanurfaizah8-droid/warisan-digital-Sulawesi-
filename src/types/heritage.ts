@@ -122,6 +122,25 @@ export interface EditHistoryEntry {
   fieldsChanged?: string[];
 }
 
+export type PracticeStatus =
+  | 'masih_dipraktikkan'
+  | 'revitalisasi'
+  | 'terancam_punah';
+
+export interface VideoDocumentation {
+  title: string;
+  institution: string;
+  url: string;
+  videoType?: string;
+  duration?: string;
+}
+
+export interface HistoricalTimelineEntry {
+  period: string;
+  title: string;
+  description: string;
+}
+
 export interface HeritageItem {
   id: string;
   title: string;
@@ -132,12 +151,19 @@ export interface HeritageItem {
   regionDetail: string;
   verificationStatus?: VerificationStatus;
   epistemologicalNote?: string; // Catatan metodologis mengenai sifat informasi (fakta sejarah vs sastra mitologi vs tradisi tutur)
+  illustrationDisclaimer?: string; // Penjelasan spesifik pembeda fakta vs ilustrasi naratif
+  practiceStatus?: PracticeStatus; // Status keberlangsungan tradisi saat ini
+  practiceStatusNote?: string; // Catatan detail kondisi keberlangsungan tradisi
+  preservationThreats?: string[]; // Ancaman pelestarian: alih fungsi lahan, modernisasi, krisis iklim, regenerasi
+  confidenceLevel?: string; // Indikator tingkat kepercayaan data
   elderNarrator: {
     name: string;
     age?: number;
     titleOrRole: string;
     location: string;
     status?: NarratorStatus; // Penjelasan status narasumber: Tokoh Nyata, Tokoh Sejarah, Nama Disamarkan, atau Ilustratif
+    institutionOrCommunity?: string; // Lembaga adat, komunitas pelestari, atau asosiasi narasumber
+    biographySnippet?: string; // Keterangan kiprah narasumber adat riil
   };
   recordedBy: {
     name: string;
@@ -163,6 +189,8 @@ export interface HeritageItem {
   references?: CulturalReference[];
   geographicData?: GeographicData;
   documentationMeta?: DocumentationMeta;
+  videoDocumentation?: VideoDocumentation;
+  historicalTimeline?: HistoricalTimelineEntry[];
   isUserCreated?: boolean;
   likesCount?: number;
   badge?: string;
