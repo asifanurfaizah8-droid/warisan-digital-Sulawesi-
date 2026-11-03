@@ -213,26 +213,14 @@ export function toggleBookmark(id: string): string[] {
   return next;
 }
 
+import { audioEngine } from './audioPlayer';
+
 export function speakText(text: string, onEnd?: () => void) {
-  if (!('speechSynthesis' in window)) {
-    console.warn('SpeechSynthesis not supported');
-    return;
-  }
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = 'id-ID';
-  utterance.rate = 0.95;
-  if (onEnd) {
-    utterance.onend = onEnd;
-    utterance.onerror = onEnd;
-  }
-  window.speechSynthesis.speak(utterance);
+  audioEngine.speak(text, { onEnd });
 }
 
 export function stopSpeaking() {
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel();
-  }
+  audioEngine.stopAll();
 }
 
 /**

@@ -29,9 +29,14 @@ import {
   Users,
   Leaf,
   Lightbulb,
+  Camera,
+  Music,
+  Square,
+  Play,
 } from 'lucide-react';
 import { HeritageItem, CulturalReference } from '../types/heritage';
 import { speakText, stopSpeaking } from '../utils/storage';
+import { audioEngine } from '../utils/audioPlayer';
 import {
   VERIFICATION_STATUS_CONFIG,
   NARRATOR_STATUS_CONFIG,
@@ -60,6 +65,8 @@ export const HeritageDetailModal: React.FC<HeritageDetailModalProps> = ({
   onSelectItem,
 }) => {
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+  const [isPlayingMelody, setIsPlayingMelody] = useState(false);
+  const [activeMelodyStyle, setActiveMelodyStyle] = useState<'kecapi' | 'kolintang' | null>(null);
   const [liked, setLiked] = useState(false);
   const [fontSize, setFontSize] = useState<'normal' | 'large' | 'larger'>('normal');
   const [copiedCitation, setCopiedCitation] = useState(false);
@@ -68,7 +75,7 @@ export const HeritageDetailModal: React.FC<HeritageDetailModalProps> = ({
 
   useEffect(() => {
     return () => {
-      stopSpeaking();
+      audioEngine.stopAll();
     };
   }, []);
 
@@ -95,13 +102,39 @@ export const HeritageDetailModal: React.FC<HeritageDetailModalProps> = ({
 
   const handleToggleVoiceReader = () => {
     if (isPlayingAudio) {
-      stopSpeaking();
+      audioEngine.stopSpeaking();
       setIsPlayingAudio(false);
     } else {
+      if (isPlayingMelody) {
+        audioEngine.stopMelody();
+        setIsPlayingMelody(false);
+        setActiveMelodyStyle(null);
+      }
       setIsPlayingAudio(true);
       const textToRead = `${item.title}. Warisan dari Suku ${item.tribe}, ${item.province}. Penuturan oleh ${item.elderNarrator.name}. ${item.summary}. Makna filosofis: ${item.philosophicalMeaning}. Pesan tetua: ${item.preservationAdvice}`;
-      speakText(textToRead, () => {
+      audioEngine.speak(textToRead, {
+        onStart: () => setIsPlayingAudio(true),
+        onEnd: () => setIsPlayingAudio(false),
+        onError: () => setIsPlayingAudio(false),
+      });
+    }
+  };
+
+  const handleToggleMelody = (style: 'kecapi' | 'kolintang') => {
+    if (isPlayingMelody && activeMelodyStyle === style) {
+      audioEngine.stopMelody();
+      setIsPlayingMelody(false);
+      setActiveMelodyStyle(null);
+    } else {
+      if (isPlayingAudio) {
+        audioEngine.stopSpeaking();
         setIsPlayingAudio(false);
+      }
+      setIsPlayingMelody(true);
+      setActiveMelodyStyle(style);
+      audioEngine.playSulawesiMelody(style, () => {
+        setIsPlayingMelody(false);
+        setActiveMelodyStyle(null);
       });
     }
   };
@@ -327,6 +360,96 @@ export const HeritageDetailModal: React.FC<HeritageDetailModalProps> = ({
             </div>
           </div>
 
+          {/* Audio Player & Sound Experience Bar */}
+          <div className="bg-stone-950/90 border-b border-stone-800 px-6 py-3 flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="flex items-center gap-1.5 font-semibold text-amber-300 font-mono text-[11px] uppercase tracking-wider">
+                <Volume2 className="w-3.5 h-3.5 text-amber-400" />
+                <span>Audio Budaya:</span>
+              </span>
+
+              {/* TTS Narasi Voice */}
+              <button
+                type="button"
+                onClick={handleToggleVoiceReader}
+                className={`px-3 py-1.5 rounded-lg border text-xs font-semibold flex items-center gap-1.5 transition ${
+                  isPlayingAudio
+                    ? 'bg-amber-500 text-stone-950 border-amber-300 font-bold shadow-md shadow-amber-500/20'
+                    : 'bg-stone-900 hover:bg-stone-800 text-stone-200 border-stone-700'
+                }`}
+              >
+                {isPlayingAudio ? (
+                  <>
+                    <VolumeX className="w-3.5 h-3.5 animate-pulse" />
+                    <span>Hentikan Narasi</span>
+                  </>
+                ) : (
+                  <>
+                    <Volume2 className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Dengar Narasi Lisan</span>
+                  </>
+                )}
+              </button>
+
+              {/* Traditional Melody: Kecapi Bugis */}
+              <button
+                type="button"
+                onClick={() => handleToggleMelody('kecapi')}
+                title="Dengarkan alunan petikan kecapi tradisional Sulawesi"
+                className={`px-3 py-1.5 rounded-lg border text-xs font-semibold flex items-center gap-1.5 transition ${
+                  isPlayingMelody && activeMelodyStyle === 'kecapi'
+                    ? 'bg-amber-500 text-stone-950 border-amber-300 font-bold shadow-md shadow-amber-500/20'
+                    : 'bg-stone-900 hover:bg-stone-800 text-amber-200 border-stone-700'
+                }`}
+              >
+                <Music className="w-3.5 h-3.5 text-amber-400" />
+                <span>
+                  {isPlayingMelody && activeMelodyStyle === 'kecapi'
+                    ? 'Hentikan Kecapi'
+                    : 'Petikan Kecapi'}
+                </span>
+              </button>
+
+              {/* Traditional Melody: Kolintang Minahasa */}
+              <button
+                type="button"
+                onClick={() => handleToggleMelody('kolintang')}
+                title="Dengarkan denting melodi kolintang kayu Sulawesi"
+                className={`px-3 py-1.5 rounded-lg border text-xs font-semibold flex items-center gap-1.5 transition ${
+                  isPlayingMelody && activeMelodyStyle === 'kolintang'
+                    ? 'bg-amber-500 text-stone-950 border-amber-300 font-bold shadow-md shadow-amber-500/20'
+                    : 'bg-stone-900 hover:bg-stone-800 text-amber-200 border-stone-700'
+                }`}
+              >
+                <Music className="w-3.5 h-3.5 text-yellow-400" />
+                <span>
+                  {isPlayingMelody && activeMelodyStyle === 'kolintang'
+                    ? 'Hentikan Kolintang'
+                    : 'Denting Kolintang'}
+                </span>
+              </button>
+            </div>
+
+            {/* Live Audio Visualizer Equalizer */}
+            {(isPlayingAudio || isPlayingMelody) && (
+              <div className="flex items-center gap-2 text-[11px] font-mono text-amber-300 bg-amber-500/15 border border-amber-500/30 px-2.5 py-1 rounded-lg">
+                <span className="flex items-end gap-0.5 h-3">
+                  <span className="w-0.5 h-3 bg-amber-400 animate-pulse" />
+                  <span className="w-0.5 h-1.5 bg-amber-400 animate-ping" />
+                  <span className="w-0.5 h-2.5 bg-amber-400 animate-pulse" />
+                  <span className="w-0.5 h-2 bg-amber-400 animate-bounce" />
+                </span>
+                <span>
+                  {isPlayingAudio
+                    ? 'Membacakan Tuturan...'
+                    : activeMelodyStyle === 'kecapi'
+                    ? 'Mengalunkan Petikan Kecapi Bugis...'
+                    : 'Mengalunkan Kolintang Minahasa...'}
+                </span>
+              </div>
+            )}
+          </div>
+
           {/* Modal Body */}
           <div className="p-6 sm:p-8 overflow-y-auto space-y-6 flex-1 print:p-0 print:bg-white print:text-black">
             {/* Title & Subtitle */}
@@ -514,9 +637,9 @@ export const HeritageDetailModal: React.FC<HeritageDetailModalProps> = ({
                         </span>
                         <div className="flex items-center gap-1">
                           <button
-                            onClick={() => speakText(term.term)}
-                            title="Dengarkan pengucapan istilah"
-                            className="p-1 rounded bg-stone-800 hover:bg-stone-700 text-stone-300"
+                            onClick={() => audioEngine.pronounceTerm(term.term, term.pronunciationTip)}
+                            title="Dengarkan pengucapan istilah dengan alunan nada"
+                            className="p-1 rounded bg-stone-800 hover:bg-amber-600 hover:text-stone-950 text-amber-300 transition"
                           >
                             <Volume2 className="w-3.5 h-3.5" />
                           </button>

@@ -15,6 +15,7 @@ import {
   Plus,
   ShieldCheck,
   CheckCircle2,
+  VolumeX,
 } from 'lucide-react';
 import {
   HeritageCategory,
@@ -27,6 +28,7 @@ import {
   VERIFICATION_STATUS_CONFIG,
   NARRATOR_STATUS_CONFIG,
 } from '../utils/academicEnrichment';
+import { audioEngine } from '../utils/audioPlayer';
 
 interface HeritageLibraryProps {
   items: HeritageItem[];
@@ -77,6 +79,24 @@ export const HeritageLibrary: React.FC<HeritageLibraryProps> = ({
   );
   const [selectedTribeFilter, setSelectedTribeFilter] = useState<string>(filterTribe || 'all');
   const [onlyBookmarked, setOnlyBookmarked] = useState(false);
+  const [playingAudioId, setPlayingAudioId] = useState<string | null>(null);
+
+  const handleToggleCardAudio = (item: HeritageItem, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (playingAudioId === item.id) {
+      audioEngine.stopAll();
+      setPlayingAudioId(null);
+    } else {
+      audioEngine.stopAll();
+      setPlayingAudioId(item.id);
+      const shortSnippet = `${item.title}. Tradisi dari Suku ${item.tribe}, ${item.province}. ${item.summary}`;
+      audioEngine.speak(shortSnippet, {
+        onStart: () => setPlayingAudioId(item.id),
+        onEnd: () => setPlayingAudioId(null),
+        onError: () => setPlayingAudioId(null),
+      });
+    }
+  };
 
   // Sync external filters if passed from map
   React.useEffect(() => {
@@ -403,6 +423,8 @@ export const HeritageLibrary: React.FC<HeritageLibraryProps> = ({
             const narrConfig =
               NARRATOR_STATUS_CONFIG[item.elderNarrator.status || 'tokoh_ilustratif'];
 
+            const isAudioPlayingThis = playingAudioId === item.id;
+
             return (
               <div
                 key={item.id}
@@ -424,20 +446,42 @@ export const HeritageLibrary: React.FC<HeritageLibraryProps> = ({
                       </span>
                     </div>
 
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onToggleBookmark(item.id);
-                      }}
-                      className="text-stone-400 hover:text-amber-300 transition"
-                      title="Simpan ke Favorit"
-                    >
-                      <Bookmark
-                        className={`w-4 h-4 ${
-                          isBookmarked ? 'fill-amber-400 text-amber-400' : ''
+                    <div className="flex items-center gap-1.5">
+                      {/* Audio Quick Play Button */}
+                      <button
+                        type="button"
+                        onClick={(e) => handleToggleCardAudio(item, e)}
+                        title={isAudioPlayingThis ? 'Hentikan Suara' : 'Dengarkan Ringkasan Suara'}
+                        className={`p-1.5 rounded-xl border text-xs font-semibold flex items-center gap-1 transition ${
+                          isAudioPlayingThis
+                            ? 'bg-amber-500 text-stone-950 border-amber-300 animate-pulse shadow-lg'
+                            : 'bg-stone-800 hover:bg-stone-700 text-amber-300 border-stone-700'
                         }`}
-                      />
-                    </button>
+                      >
+                        {isAudioPlayingThis ? (
+                          <VolumeX className="w-3.5 h-3.5" />
+                        ) : (
+                          <Volume2 className="w-3.5 h-3.5" />
+                        )}
+                      </button>
+
+                      {/* Bookmark Button */}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onToggleBookmark(item.id);
+                        }}
+                        className="text-stone-400 hover:text-amber-300 transition p-1"
+                        title="Simpan ke Favorit"
+                      >
+                        <Bookmark
+                          className={`w-4 h-4 ${
+                            isBookmarked ? 'fill-amber-400 text-amber-400' : ''
+                          }`}
+                        />
+                      </button>
+                    </div>
                   </div>
 
                   {/* Verification Status Pill */}

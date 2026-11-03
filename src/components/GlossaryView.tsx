@@ -14,9 +14,10 @@ import {
   Layers,
   Quote,
   Edit3,
+  VolumeX,
 } from 'lucide-react';
 import { HeritageItem, Tribe } from '../types/heritage';
-import { speakText } from '../utils/storage';
+import { audioEngine } from '../utils/audioPlayer';
 
 interface GlossaryViewProps {
   items: HeritageItem[];
@@ -351,8 +352,8 @@ export const GlossaryView: React.FC<GlossaryViewProps> = ({
                     </span>
                     <div className="flex items-center gap-1.5">
                       <button
-                        onClick={() => speakText(term.term)}
-                        title="Dengarkan pelafalan kata"
+                        onClick={() => audioEngine.pronounceTerm(term.term, term.pronunciationTip)}
+                        title="Dengarkan pelafalan kata dengan alunan nada"
                         className="p-2 rounded-xl bg-stone-800 hover:bg-amber-600 hover:text-stone-950 text-amber-300 transition shadow"
                       >
                         <Volume2 className="w-4 h-4" />
@@ -568,7 +569,7 @@ export const GlossaryView: React.FC<GlossaryViewProps> = ({
                             key={tIdx}
                             onClick={(e) => {
                               e.stopPropagation();
-                              speakText(term.term);
+                              audioEngine.pronounceTerm(term.term, term.pronunciationTip);
                             }}
                             title={`Dengar: ${term.term} (${term.meaning})`}
                             className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-stone-800 hover:bg-stone-700 text-amber-300 text-[10px] font-mono border border-stone-700 transition"
@@ -586,7 +587,11 @@ export const GlossaryView: React.FC<GlossaryViewProps> = ({
                 <div className="pt-4 border-t border-stone-800/80 flex items-center justify-between gap-2 flex-wrap">
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => speakText(`${story.title}. ${story.summary}`)}
+                      onClick={() =>
+                        audioEngine.speak(
+                          `${story.title}. Suku ${story.tribe}, ${story.province}. ${story.summary}`
+                        )
+                      }
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-stone-800 hover:bg-stone-700 text-amber-300 text-xs font-semibold transition"
                     >
                       <Volume2 className="w-3.5 h-3.5" />
@@ -654,7 +659,11 @@ export const GlossaryView: React.FC<GlossaryViewProps> = ({
                 </div>
 
                 <button
-                  onClick={() => speakText(`${phil.title}. ${phil.meaning}`)}
+                  onClick={() =>
+                    audioEngine.speak(
+                      `${phil.title}. Falsafah luhur Suku ${phil.tribe}, ${phil.province}. Makna kearifannya: ${phil.meaning}`
+                    )
+                  }
                   className="mt-2 inline-flex items-center gap-1.5 text-xs text-amber-400 hover:text-amber-300 font-semibold self-start"
                 >
                   <Volume2 className="w-3.5 h-3.5" />

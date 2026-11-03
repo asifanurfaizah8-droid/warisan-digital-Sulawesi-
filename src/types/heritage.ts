@@ -153,6 +153,10 @@ export interface HeritageItem {
   preservationAdvice: string;
   estimatedEra: string;
   tags: string[];
+  imageUrl?: string;
+  imageCaption?: string;
+  galleryImages?: string[];
+  audioUrl?: string;
   socialFunction?: string;
   ecologicalBenefits?: string;
   modernRelevance?: string;
