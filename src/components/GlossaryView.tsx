@@ -18,6 +18,11 @@ import {
 } from 'lucide-react';
 import { HeritageItem, Tribe } from '../types/heritage';
 import { audioEngine } from '../utils/audioPlayer';
+import {
+  getCulturalContextForTerm,
+  selectBestOriginItem,
+  normalizeTermKey,
+} from '../utils/culturalContextMapping';
 
 interface GlossaryViewProps {
   items: HeritageItem[];
@@ -35,8 +40,37 @@ export const GlossaryView: React.FC<GlossaryViewProps> = ({
   const [storyCategoryFilter, setStoryCategoryFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Collect all local terms across items
+  // Collect all local terms across items with culturally legitimate context and origin item
   const allTerms = useMemo(() => {
+    // 1. Group occurrences by term and tribe
+    const termGroups = new Map<
+      string,
+      {
+        term: string;
+        language: string;
+        tribe: Tribe;
+        pronunciationTip?: string;
+        candidates: { item: HeritageItem; meaning: string }[];
+      }
+    >();
+
+    items.forEach((item) => {
+      item.localTerms.forEach((lt) => {
+        const normKey = `${normalizeTermKey(lt.term)}-${item.tribe}`;
+        if (!termGroups.has(normKey)) {
+          termGroups.set(normKey, {
+            term: lt.term,
+            language: lt.language,
+            tribe: item.tribe,
+            pronunciationTip: lt.pronunciationTip,
+            candidates: [],
+          });
+        }
+        termGroups.get(normKey)!.candidates.push({ item, meaning: lt.meaning });
+      });
+    });
+
+    // 2. Select best origin item and assign accurate cultural domain & context
     const list: {
       term: string;
       meaning: string;
@@ -46,26 +80,36 @@ export const GlossaryView: React.FC<GlossaryViewProps> = ({
       originItemTitle: string;
       province: string;
       originItem: HeritageItem;
+      domain: string;
+      domainEmoji: string;
+      culturalContext: string;
     }[] = [];
 
-    const seen = new Set<string>();
+    termGroups.forEach((group) => {
+      const { bestItem, bestMeaning } = selectBestOriginItem(
+        group.candidates,
+        group.term,
+        group.tribe
+      );
+      const meta = getCulturalContextForTerm(
+        group.term,
+        bestMeaning,
+        group.tribe,
+        bestItem
+      );
 
-    items.forEach((item) => {
-      item.localTerms.forEach((lt) => {
-        const key = `${lt.term.toLowerCase()}-${item.tribe}`;
-        if (!seen.has(key)) {
-          seen.add(key);
-          list.push({
-            term: lt.term,
-            meaning: lt.meaning,
-            language: lt.language,
-            tribe: item.tribe,
-            pronunciationTip: lt.pronunciationTip,
-            originItemTitle: item.title,
-            province: item.province,
-            originItem: item,
-          });
-        }
+      list.push({
+        term: group.term,
+        meaning: bestMeaning,
+        language: group.language,
+        tribe: group.tribe,
+        pronunciationTip: group.pronunciationTip,
+        originItemTitle: bestItem.title,
+        province: bestItem.province,
+        originItem: bestItem,
+        domain: meta.domain,
+        domainEmoji: meta.domainEmoji,
+        culturalContext: meta.context,
       });
     });
 
@@ -85,7 +129,9 @@ export const GlossaryView: React.FC<GlossaryViewProps> = ({
           term.meaning.toLowerCase().includes(q) ||
           term.language.toLowerCase().includes(q) ||
           term.tribe.toLowerCase().includes(q) ||
-          term.originItemTitle.toLowerCase().includes(q)
+          term.originItemTitle.toLowerCase().includes(q) ||
+          term.culturalContext.toLowerCase().includes(q) ||
+          term.domain.toLowerCase().includes(q)
         );
       }
       return true;
@@ -376,6 +422,10 @@ export const GlossaryView: React.FC<GlossaryViewProps> = ({
                     </span>
                     <span className="text-[11px] text-stone-400 font-sans">• Suku {term.tribe}</span>
                     <span className="text-[10px] text-stone-500">({term.province})</span>
+                    <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-amber-950/50 text-amber-300 border border-amber-800/50 ml-auto flex items-center gap-1">
+                      <span>{term.domainEmoji}</span>
+                      <span>{term.domain}</span>
+                    </span>
                   </div>
 
                   <p className="text-xs text-stone-200 leading-relaxed font-sans pt-1">
@@ -390,14 +440,21 @@ export const GlossaryView: React.FC<GlossaryViewProps> = ({
                   )}
                 </div>
 
-                <div className="pt-3 border-t border-stone-800/80 flex items-center justify-between text-[11px] text-stone-400">
-                  <span className="line-clamp-1 truncate max-w-[190px]">
-                    Konteks: {term.originItemTitle}
-                  </span>
+                <div className="pt-3 border-t border-stone-800/80 flex items-center justify-between gap-2 text-[11px] text-stone-400">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-1 text-amber-300 font-semibold text-[11px] truncate">
+                      <span className="text-stone-400 font-normal">Konteks:</span>
+                      <span className="truncate">{term.culturalContext}</span>
+                    </div>
+                    <div className="text-stone-400 text-[10px] truncate block opacity-90 mt-0.5">
+                      Rujukan: {term.originItemTitle}
+                    </div>
+                  </div>
                   {onSelectItem && (
                     <button
                       onClick={() => onSelectItem(term.originItem)}
-                      className="text-amber-400 hover:text-amber-300 font-semibold inline-flex items-center gap-1 ml-2 shrink-0"
+                      title={`Buka rujukan materi: ${term.originItemTitle}`}
+                      className="text-amber-400 hover:text-amber-300 font-semibold inline-flex items-center gap-1 shrink-0 px-2.5 py-1 rounded-lg bg-stone-800/80 hover:bg-stone-800 border border-stone-700/60 transition"
                     >
                       <span>Buka</span>
                       <ArrowRight className="w-3 h-3" />

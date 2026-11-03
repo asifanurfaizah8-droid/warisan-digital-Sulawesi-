@@ -36,7 +36,7 @@ export const INITIAL_HERITAGE_ITEMS: HeritageItem[] = [
       },
       {
         "term": "Patikala",
-        "meaning": "Buah kecombrang asam hutan pemberi aroma khas kuah",
+        "meaning": "Buah kecombrang hutan yang memberi aroma dan rasa asam khas pada kuah.",
         "language": "Bugis"
       },
       {
@@ -204,7 +204,7 @@ export const INITIAL_HERITAGE_ITEMS: HeritageItem[] = [
       },
       {
         "term": "Sabbangparu",
-        "meaning": "Sutra bermotif halus serbaguna pakaian pesta",
+        "meaning": "Jenis kain sutra Sengkang bermotif halus yang umum digunakan sebagai busana adat dan pakaian pesta.",
         "language": "Bugis"
       }
     ],
@@ -430,7 +430,7 @@ export const INITIAL_HERITAGE_ITEMS: HeritageItem[] = [
       },
       {
         "term": "Daun Mayana",
-        "meaning": "Daun miana herbal yang menyerap lemak dan memberi rasa gurih herbal",
+        "meaning": "Daun miana yang digunakan sebagai pembungkus sekaligus pemberi aroma khas pada pa'piong.",
         "language": "Toraja"
       }
     ],
@@ -683,7 +683,7 @@ export const INITIAL_HERITAGE_ITEMS: HeritageItem[] = [
       },
       {
         "term": "Punggawa",
-        "meaning": "Nakhoda tertinggi pembaca bintang dan arus laut",
+        "meaning": "Pemimpin atau kapten pelayaran perahu Sandeq yang memimpin seluruh awak kapal, mengarahkan navigasi, serta membaca pergerakan bintang dan arus laut.",
         "language": "Mandar"
       }
     ],
@@ -748,7 +748,7 @@ export const INITIAL_HERITAGE_ITEMS: HeritageItem[] = [
       },
       {
         "term": "Banua Olang",
-        "meaning": "Rumah adat panggung kayu bertanduk khas Mamasa",
+        "meaning": "Rumah adat tradisional panggung kayu khas Mamasa yang kokoh di atas tiang-tiang kayu beratap ijuk.",
         "language": "Mamasa"
       },
       {
@@ -826,8 +826,8 @@ export const INITIAL_HERITAGE_ITEMS: HeritageItem[] = [
         "language": "Kaili"
       },
       {
-        "term": "Nosarara Nosabatutu",
-        "meaning": "Falsafah suku Kaili: Bersaudara dan Bersatu",
+        "term": "Uripa / Asam Mentah",
+        "meaning": "Buah asam jawa mentah hijau pembuat kuah kaldu Kaledo bening dan berasa asam segar alami",
         "language": "Kaili"
       },
       {
@@ -909,7 +909,7 @@ export const INITIAL_HERITAGE_ITEMS: HeritageItem[] = [
       },
       {
         "term": "Ledo / Tara",
-        "meaning": "Dialek rumpun bahasa Kaili di lembah Palu",
+        "meaning": "Dua dialek utama dalam Bahasa Kaili yang penamaannya didasarkan pada kata penyangkalan atau partikel ingkar 'tidak' (dialek Ledo di Lembah Palu dan dialek Tara di pesisir utara).",
         "language": "Kaili"
       }
     ],
@@ -1342,7 +1342,7 @@ export const INITIAL_HERITAGE_ITEMS: HeritageItem[] = [
     "localTerms": [
       {
         "term": "Lipu",
-        "meaning": "Negeri, tanah air, dan tumpah darah",
+        "meaning": "Negeri, tanah tumpah darah, dan kedaulatan rakyat dalam sistem ketatanegaraan Kesultanan Buton",
         "language": "Buton (Wolio)"
       },
       {

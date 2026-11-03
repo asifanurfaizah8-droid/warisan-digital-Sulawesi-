@@ -42,18 +42,47 @@ export function getSavedHeritageItems(): HeritageItem[] {
       return ALL_INITIAL_ITEMS;
     }
 
-    // Merge any missing initial items so all newly added seeds are automatically present
+    // Seed map for fast lookup of official curated data
+    const seedMap = new Map(ALL_INITIAL_ITEMS.map((item) => [item.id, item]));
     const existingIds = new Set(parsed.map((item: any) => item.id));
-    const missingSeedItems = ALL_INITIAL_ITEMS.filter((item) => !existingIds.has(item.id));
-    const currentEnriched = parsed.map(enrichHeritageItem);
 
-    if (missingSeedItems.length > 0) {
-      const merged = [...currentEnriched, ...missingSeedItems];
+    // Update existing seed items with latest curated definitions while preserving user custom items & likes
+    const syncedItems: HeritageItem[] = parsed.map((item: any) => {
+      if (seedMap.has(item.id)) {
+        const freshSeed = seedMap.get(item.id)!;
+        return enrichHeritageItem({
+          ...item,
+          title: freshSeed.title,
+          subtitle: freshSeed.subtitle,
+          summary: freshSeed.summary,
+          philosophicalMeaning: freshSeed.philosophicalMeaning,
+          localTerms: freshSeed.localTerms,
+          ingredientsOrMaterials: freshSeed.ingredientsOrMaterials,
+          toolsUsed: freshSeed.toolsUsed,
+          stepsOrNarrative: freshSeed.stepsOrNarrative,
+          elderNarrator: freshSeed.elderNarrator,
+          verificationStatus: freshSeed.verificationStatus,
+          references: freshSeed.references,
+          preservationAdvice: freshSeed.preservationAdvice,
+          socialFunction: freshSeed.socialFunction,
+          ecologicalBenefits: freshSeed.ecologicalBenefits,
+          modernRelevance: freshSeed.modernRelevance,
+        });
+      }
+      return enrichHeritageItem(item);
+    });
+
+    // Merge any newly added seed items not yet present in user's localStorage
+    const missingSeedItems = ALL_INITIAL_ITEMS.filter((item) => !existingIds.has(item.id));
+    const merged = [...syncedItems, ...missingSeedItems];
+
+    try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
-      return merged;
+    } catch {
+      // Ignore quota errors if storage is near limit
     }
 
-    return currentEnriched;
+    return merged;
   } catch (e) {
     console.error('Error reading localStorage:', e);
     return ALL_INITIAL_ITEMS;
